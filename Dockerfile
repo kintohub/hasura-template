@@ -1,4 +1,4 @@
-FROM hasura/graphql-engine:v1.0.0-rc.1.cli-migrations
+FROM hasura/graphql-engine:v1.0.0.cli-migrations
 
 ENV HASURA_GRAPHQL_MIGRATIONS_DIR /migrations
 ENV HASURA_GRAPHQL_ENABLE_CONSOLE true
