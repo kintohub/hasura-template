@@ -1,62 +1,51 @@
 # KintoHub Hasura Example
 
 ## Overview
-Hasura is a graphql engine which makes it easy to create CRUD graphql on top of postgres aside from stitching together APIs providing and eventing queue!
-
-[](live/example/on/kintohub)
+Hasura's graphql-engine makes it easy to create secure CRUD graphql operations on top of postgres.
+It also comes with the ability to stitch APIs together and even event driven operations for queuing!
 
 __About KintoHub:__
 
-KintoHub aligns teams to ship & operate cloud native apps with ease. [Learn More](https://www.kintohub.com)
+KintoHub is a cloud platform made for fullstack developers. [Learn More](https://www.kintohub.com)
 
+## Develop Locally
 
-## Deployment
+**Ensure you have Docker v2.x or higher running locally on your machine**
 
-1. Apply this template to your [Github](https://github.com/kintohub/hasura-template/generate)
-2. Create a [Website Block](https://beta.kintohub.com) on KintoHub:
-3. Set the name of your block
-4. Select `Dynamic Web App`
-5. For `language` select `Custom Dockerfile`
-6. Set the port to 8080
-7. Hit the `Create` button
-8. You're now good to build! Click `Build Latest Commit`. Once complete, Click  Now click `Add To Project` and Create a new Project.
-9. Scroll to "KintoBlocks" section and in the Search Box type "Postgres" and select it to add a Postgres Database.
-10. Click `Create New Project` at bottom right
-
-The deployment can take up to 3 minutes. Once successful, click `Open URL` on the Hasura Block under "KintoBlocks" section.
-
-## Installation & Local Run
-
-Run `docker-compose up -d`
-
-## Usage
-
-Click "Open URL" and start playing with hasura. We recommend using the advance migration functionality for multiple environments such as `dev` and `staging`.
-
-## What's Next?
-
-* [Password protect your hasura instance](https://docs.kintohub.com/docs/kintoblocks/websites#basic-auth-for-websites)
-* [Setup `dev` and `staging` environments](https://docs.kintohub.com/docs/projects/environments)
-* [Read KintoHub's block series on Hasura](https://blog.kintohub.com/from-idea-to-scale-with-hasura-kintohub-part-1-7-bbc97532424a)
-
-## Hasura Pro Tips && Operations!
-
-Hasura console records every schema changes and generate the migration queries as file. In this project,we have set it up to automatically update your database when being deployed on KintoHub and be able to easily run it locally on your machine to test. Migrations are branch friendly :)
+Hasura console records every schema changes and generate the migration queries as file.
+In this project, we have set it up to automatically update your database when being deployed on KintoHub and be able to easily run it locally on your machine to test.
+Migrations are branch friendly :)
 
 You have the following files:
 
 * **config.yaml** to configure your hasura cli tools
 * **docker-compose** used to configure local postgres database and hasura instance for local testing and creating migrations.
-* **Dockerfile** is used to build and deploy your migrations onto Kintohub.
-* **migrations** folder has all changesets / migrations in it currently empty by default.
+* **Dockerfile** is used to build and deploy Hasura on KintoHub.
+* **migrations** folder has all changesets / migrations and is empty by default.
+* **metadata** folder has all migration metadata in it and is empty by default.
+* **seeds** folder that has initial SQL data which is not covered in this example. Learn more [here](https://hasura.io/docs/1.0/graphql/core/migrations/advanced/seed-data-migration.html)
 
-### Before everything else
+### Start Hasura + Postgres Locally
+
+1) run `docker-compose up -d`
+
+If you make any changes to your migrations, metadata or Dockerfile:
+
+1) run `docker-compose build` to rebuild the image
+2) run `docker-compose up -d` to update the running services
+
+### Reset your local environment
+
+1) run `docker-compose down -v` to delete your local postgres volume
+2) run `docker-compose up -d` to bring it back up
+
+### Install Hasura CLI
 
 Install hasura cli tools [here](https://docs.hasura.io/1.0/graphql/manual/hasura-cli/install-hasura-cli.html)
 
 To start a local server use `docker-compose up -d`
 
-**NOTE: If you changed your port in the `docker-compose` file, make sure to update/syc the `config.yaml` entrypoint.**
+**NOTE: If you changed your port in the `docker-compose` file, make sure to update/syc the `config.yaml` entrypoint**
 
 ### Generate Migration Files
 
@@ -94,7 +83,7 @@ To start a local server use `docker-compose up -d`
 3. Delete your migration files that you want to remove.
 4. Run `hasura migrate apply` again
 
-## Setup the database from scratch
+### Setup the database from scratch
 
 In case you need to setup the database from scratch:
 
@@ -103,3 +92,41 @@ In case you need to setup the database from scratch:
 3. Configure the `config.yaml`
 4. Ensure hasura working properly by running `hasura console`
 5. Run `hasura migrate apply` to run the migration
+
+## Deploy On KintoHub
+
+We are going to deploy Hasura + Postgres on KintoHub.
+
+### Deploy a Postgres Server
+
+To store your data, you will need a Postgres database.
+KintoHub provides a free dedicated Postgres server with 1 GB of storage.
+
+1. Click on the **Create Service** button displayed at the top right of your environment
+2. Click on the **From Catalog** tab
+3. Click on **PostgreSQL** service
+4. Enter or generate your `Username`, `Password`, and `Root Password`.
+5. Click on the **Deploy** button at the top right.
+
+This process will take around **1 Minute** to complete.
+Once the **Status** has changed from `Deploying` to `Live Version`, click on the **Access** tab at the top center of the page.
+
+Copy the **Connection String (Admin)** and paste it in a notepad to use for the next step.
+
+### Deploy a Hasura Service
+
+1. Apply this template to your [Github Account](https://github.com/kintohub/hasura-template/generate)
+2. Click on the **Create Service** button at the top right
+3. Click on the **Backend API** service
+4. Connect your Github Account or use **Import URL** tab to add the repository from step (1)
+5. Type `8080` in the **Port** field
+8. Click the **Environment Variables** tab
+9. Add the **key** `HASURA_GRAPHQL_DATABASE_URL` and paste in the **Connection String (Admin)** from the previous step as the **value**
+10. Add the **key** `HASURA_GRAPHQL_ENABLE_CONSOLE` and enter the value `true`
+11. Click on the **Deploy** button at the top right
+
+After a couple minutes, the Release complete successfully and an https link will be available at the bottom of the logs.
+
+# Support
+
+Reach out to us on [discord](https://discord.com/invite/E2CMjKP) or our [contact us page](https://www.kintohub.com/contact-us)
